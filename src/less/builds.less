@@ -1,0 +1,61 @@
+section.builds > ul > li {
+  font: normal normal normal 14px/1 FontAwesome;
+  text-rendering: auto;
+  padding-left: 120px;
+  font-size: inherit;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:before {
+    margin-left: -120px;
+    text-align: center;
+    position: absolute;
+    font-size: 120px;
+    width: 120px;
+  }
+
+  &.failed { 
+    background-color: #E86464;
+  }
+
+  &.partially-succeeded { 
+    background-color: #D6D609;
+  }
+
+  &.succeeded { 
+    background-color: #31A700;
+  }
+
+  & > h1 {
+    min-width: 400px;
+    font-size: 1.3em;
+    display: block;
+    padding: 15px;
+    margin: 0;
+    
+    span {
+      float: right;
+    }
+  }
+
+  & > ul {
+    list-style: none;
+    flex-wrap: wrap;
+    margin: 0 15px;
+    display: flex;
+    padding: 0;
+
+    & > li {
+      flex-basis: 50%;
+      padding: 5px 0;
+      font-weight: bold;
+
+      strong {
+        font-weight: normal;
+        padding-left: 5px;
+      }
+    }
+  }
+}

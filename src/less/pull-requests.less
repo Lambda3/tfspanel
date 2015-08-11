@@ -1,0 +1,34 @@
+section.pull-requests > ul > li {
+  background: url('/images/user.png') #F1F1F1 no-repeat;
+  padding-left: 120px;
+  color: black;
+
+  & > h1 {
+    font-size: 1.3em;
+    padding: 15px;
+    margin: 0;
+  }
+
+  & > ul {
+    list-style: none;
+    flex-wrap: wrap;
+    margin: 0 15px;
+    display: flex;
+    padding: 0;
+
+    & > li {
+      font-weight: bold;
+      flex-basis: 50%;
+      padding: 5px 0;
+
+      &:first-child {
+        flex-basis: 100%;
+      }
+
+      strong {
+        font-weight: normal;
+        padding-left: 5px;
+      }
+    }
+  }
+}
