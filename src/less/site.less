@@ -1,4 +1,26 @@
 @import 'panel';
 
-@import 'builds';
-@import 'pull-requests';
+body {
+  background-color: #026aa7;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  color: #F1F1F1;
+  display: flex;
+
+  & > h1 {
+    display: inline-block;
+    margin: 15px 0 0 0;
+    text-align: center;
+    flex-basis: 100%;
+    font-size: 3.5em;
+  }
+
+  & > section {
+    margin: 0 20px;
+    flex: 1;
+
+    & > h1 {
+      text-align: center;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@itemSize: 120px;
+
+section.builds > ul > li {
+  text-rendering: auto;
+
+  &:before {
+    font: normal normal normal @itemSize/1 FontAwesome;
+    margin-left: -@itemSize;
+    text-align: center;
+    position: absolute;
+    width: @itemSize;
+  }
+
+  &.failed { 
+    background-color: #E86464;
+  }
+
+  &.partially-succeeded { 
+    background-color: #D6D609;
+  }
+
+  &.succeeded { 
+    background-color: #31A700;
+  }
+
+  & > h1 > span {
+    float: right;
+  }
+}
+
+section.pull-requests > ul > li {
+  background: url('/images/user.png') #F1F1F1 no-repeat;
+  background-color: #F1F1F1;
+  color: #4A4848;
+
+  & > ul > li:first-child {
+    flex-basis: 100%;
+  }
+}
