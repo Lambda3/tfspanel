@@ -4,9 +4,6 @@ ready = (handler) ->
   else
     document.addEventListener 'DOMContentLoaded', handler
 
-singleEl = (selector) ->
-  document.querySelector selector
-
 get = (url, success, error) ->
   request = new XMLHttpRequest
   request.open 'GET', url, true
@@ -20,26 +17,26 @@ get = (url, success, error) ->
   request.onerror = error
   do request.send
 
-intervalInSeconds = 10
+intervalInSeconds = 60
 templates = new Templates
 
 loadBuilds = (builds) ->
-  buildList = singleEl 'section.builds > ul'
+  buildList = document.querySelector 'section.builds > ul'
   newHTML = templates.builds builds
 
   if newHTML != buildList.innerHTML
     buildList.innerHTML = newHTML
 
 loadPullRequests = (prs) ->
-  prList = singleEl 'section.pull-requests > ul'
+  prList = document.querySelector 'section.pull-requests > ul'
   newHTML = templates.pullRequests prs
 
   if newHTML != prList.innerHTML
     prList.innerHTML = newHTML
 
 update = ->
-  get '/builds', loadBuilds
-  get '/pullrequests', loadPullRequests
+  get '/api/builds', loadBuilds
+  get '/api/pullrequests', loadPullRequests
 
 ready ->
   do update

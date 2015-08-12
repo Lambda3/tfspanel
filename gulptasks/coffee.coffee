@@ -10,8 +10,8 @@ del = require 'del'
 
 
 path =
-  coffee: 'src/coffee/*.coffee'
-  js: 'src/js/'
+  coffee: 'wwwroot/coffee/*.coffee'
+  js: 'wwwroot/js/'
 
 compile = (stream) ->
   stream.pipe do plumber

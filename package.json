@@ -1,13 +1,18 @@
 {
-  "name": "tfs",
+  "name": "tfspanel",
   "version": "0.0.1",
   "description": "TFS build and pull request monitor",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "Startup.cs",
+  "author": { 
+    "name" : "Fernando Oliveira", 
+    "email" : "fernando@fholiveira.com", 
+    "url" : "http://fholiveira.com/"
   },
-  "author": "",
-  "license": "ISC",
+  "repository" : { 
+    "type" : "git", 
+    "url" : "https://github.com/Lambda3/tfspanel.git"
+  },
+  "license": "MIT",
   "devDependencies": {
     "coffee-script": "^1.9.3",
     "del": "^1.2.0",
@@ -26,8 +31,6 @@
     "require-dir": "^0.3.0"
   },
   "dependencies": {
-    "express": "^4.13.3",
-    "express-handlebars": "^2.0.1",
     "normalize-css": "^2.3.1"
   }
 }

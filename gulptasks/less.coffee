@@ -10,9 +10,9 @@ del = require 'del'
 
 
 path =
-  file: 'src/less/site.less'
-  less: 'src/less/*.less'
-  css: 'src/css/'
+  file: 'wwwroot/less/site.less'
+  less: 'wwwroot/less/*.less'
+  css: 'wwwroot/css/'
 
 
 gulp.task 'compile less', ->
