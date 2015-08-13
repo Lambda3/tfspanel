@@ -29,6 +29,7 @@ namespace tfspanel
 
             services.AddTransient<VsoFactory>();
             services.Configure<TfsServer>(Configuration.GetConfigurationSection("TfsServer"));
+            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

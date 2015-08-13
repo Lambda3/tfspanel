@@ -11,23 +11,42 @@ namespace TfsPanel.Controllers
     [Route("api")]
     public class TFSController : Controller
     {
+        private readonly IOptions<AppSettings> configuration;
         private readonly VsoFactory factory;
 
-        public TFSController(VsoFactory factory)
+        public TFSController(VsoFactory factory, IOptions<AppSettings> configuration)
         {
             this.factory = factory;
+            this.configuration = configuration;
         }
 
         [HttpGet, Route("/api/builds")]
         public async Task<JsonResult> Builds()
         {
             var server = factory.CreateBuildServer();
-
             var definitions = await server.BuildDefinitions();
-            var builds = (await server.Builds(definitions, 1))
-                .GroupBy(build => build.Status)
-                .OrderByDescending(status => status.Key)
-                .SelectMany(build => build.OrderByDescending(b => b.FinishTime))
+
+            var buildsByDefs = (await server.Builds(definitions, 1))
+                .OrderByDescending(build => build.FinishTime)
+                .GroupBy(build => build.Definition);
+
+            var lastExecutions = buildsByDefs
+                .Where(group => group.Any())
+                .Select(group => group.First())
+                .OrderByDescending(build => build.Status)
+                .ThenByDescending(build => build.FinishTime)
+                .Take(configuration.Options.MaxItems);
+
+            var previousExecutions = Enumerable.Empty<Build>();
+            if (lastExecutions.Count() < configuration.Options.MaxItems)
+                previousExecutions = buildsByDefs
+                    .SelectMany(group => group.Skip(1))
+                    .OrderByDescending(build => build.FinishTime);
+
+
+            var builds = lastExecutions
+                .Concat(previousExecutions)
+                .Take(configuration.Options.MaxItems)
                 .Select(build => new
                 {
                     number = build.Number,
@@ -49,6 +68,7 @@ namespace TfsPanel.Controllers
             var repos = await server.Repositories();
             var prs = (await server.ActivePullRequests(repos))
                 .OrderByDescending(pr => pr.CreationDate)
+                .Take(configuration.Options.MaxItems)
                 .Select(pr => new
                 {
                     from = pr.FromBranch,
