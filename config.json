@@ -1,15 +1,18 @@
 {
   "AppSettings": {
-    "MaxItems":  6
+    "MaxItemsToShow": 6,
+    "DateFormat":  "dd/MM/yyy HH:mm"
   },
   "TfsServer": {
     "PullRequests": {
+      "ItemsPerRequest": 6,
       "Username": "xxxx@yyyy.com",
       "Password": "password here",
       "TeamProject": "MyTeamProject",
       "Api": "https://xxxx_vso.visualstudio.com/DefaultCollection/MyTeamProject/_apis/"
     },
     "Builds": {
+      "ItemsPerDefinitionPerRequest": 3,
       "Username": "aaaa@bbbb.com",
       "Password": "password here",
       "TeamProject": "MyTeamProject",

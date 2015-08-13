@@ -26,34 +26,34 @@ namespace TfsPanel.Controllers
             var server = factory.CreateBuildServer();
             var definitions = await server.BuildDefinitions();
 
-            var buildsByDefs = (await server.Builds(definitions, 1))
+            var allBuilds = (await server.Builds(definitions)).ToArray();
+                
+            var lastProblematicExecutions = allBuilds
                 .OrderByDescending(build => build.FinishTime)
-                .GroupBy(build => build.Definition);
-
-            var lastExecutions = buildsByDefs
+                .GroupBy(build => build.Definition)
                 .Where(group => group.Any())
                 .Select(group => group.First())
+                .Where(build => build.Status != BuildStatus.Succeeded)
                 .OrderByDescending(build => build.Status)
                 .ThenByDescending(build => build.FinishTime)
-                .Take(configuration.Options.MaxItems);
+                .Take(configuration.Options.MaxItemsToShow);
 
             var previousExecutions = Enumerable.Empty<Build>();
-            if (lastExecutions.Count() < configuration.Options.MaxItems)
-                previousExecutions = buildsByDefs
-                    .SelectMany(group => group.Skip(1))
+            if (lastProblematicExecutions.Count() < configuration.Options.MaxItemsToShow)
+                previousExecutions = allBuilds
+                    .Except(lastProblematicExecutions)
                     .OrderByDescending(build => build.FinishTime);
 
-
-            var builds = lastExecutions
+            var builds = lastProblematicExecutions
                 .Concat(previousExecutions)
-                .Take(configuration.Options.MaxItems)
+                .Take(configuration.Options.MaxItemsToShow)
                 .Select(build => new
                 {
                     number = build.Number,
                     name = build.Definition,
                     author = build.Author,
                     status = build.Status.ToJson(),
-                    date = build.FinishTime.ToString("dd/MM/yyy HH:mm"),
+                    date = build.FinishTime.ToString(configuration.Options.DateFormat),
                     duration = build.Duration
                 });
 
@@ -68,7 +68,7 @@ namespace TfsPanel.Controllers
             var repos = await server.Repositories();
             var prs = (await server.ActivePullRequests(repos))
                 .OrderByDescending(pr => pr.CreationDate)
-                .Take(configuration.Options.MaxItems)
+                .Take(configuration.Options.MaxItemsToShow)
                 .Select(pr => new
                 {
                     from = pr.FromBranch,
@@ -76,7 +76,7 @@ namespace TfsPanel.Controllers
                     to = pr.ToBranch,
                     title = pr.Title,
                     repo = pr.Repo.Name,
-                    date = pr.CreationDate.ToString("dd/MM/yyy hh:mm")
+                    date = pr.CreationDate.ToString(configuration.Options.DateFormat)
                 });
 
             return Json(prs);

@@ -1,10 +1,4 @@
 ﻿using Microsoft.Framework.OptionsModel;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using TfsPanel.Configuration;
 
 namespace TfsPanel.Vso
@@ -18,20 +12,16 @@ namespace TfsPanel.Vso
             this.server = server;
         }
 
-        public VisualStudioOnline CreateBuildServer()
+        public VisualStudioOnline CreateBuildServer() =>
+            CreateServer(server.Options.Builds);
+
+        public VisualStudioOnline CreatePullRequestsServer() =>
+            CreateServer(server.Options.PullRequests);
+
+        private VisualStudioOnline CreateServer(TfsServerData data)
         {
-            var serverData = server.Options.Server ?? server.Options.Builds;
-            var requests = new Requests(serverData.Api, serverData.Username, serverData.Password);
-
-            return new VisualStudioOnline(requests) { TeamProject = serverData.TeamProject };
-        }
-
-        public VisualStudioOnline CreatePullRequestsServer()
-        {
-            var serverData = server.Options.Server ?? server.Options.PullRequests;
-            var requests = new Requests(serverData.Api, serverData.Username, serverData.Password);
-
-            return new VisualStudioOnline(requests) { TeamProject = serverData.TeamProject };
+            var requests = new Requests(data.Api, data.Username, data.Password);
+            return new VisualStudioOnline(requests, data);
         }
     }
 }

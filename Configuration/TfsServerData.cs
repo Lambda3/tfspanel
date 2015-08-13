@@ -2,16 +2,35 @@
 {
     public class TfsServer
     {
-        public TfsServerData Builds { get; set; }
-        public TfsServerData PullRequests { get; set; }
-        public TfsServerData Server { get; set; }
+        public TfsBuildServerData Builds { get; set; }
+        public TfsPullRequestsServerData PullRequests { get; set; }
     }
 
-    public class TfsServerData
+    public abstract class TfsServerData
     {
         public string TeamProject { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Api { get; set; }
+    }
+
+    public class TfsBuildServerData : TfsServerData
+    {
+        public TfsBuildServerData()
+        {
+            ItemsPerDefinitionPerRequest = 3;
+        }
+
+        public int ItemsPerDefinitionPerRequest { get; set; }
+    }
+
+    public class TfsPullRequestsServerData : TfsServerData
+    {
+        public TfsPullRequestsServerData()
+        {
+            ItemsPerRequest = 6;
+        }
+
+        public int ItemsPerRequest { get; set; }
     }
 }

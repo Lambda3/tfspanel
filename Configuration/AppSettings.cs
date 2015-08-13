@@ -2,6 +2,7 @@
 {
     public class AppSettings
     {
-        public int MaxItems { get; set; }
+        public int MaxItemsToShow { get; set; }
+        public string DateFormat { get; set; }
     }
 }
