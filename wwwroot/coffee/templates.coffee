@@ -14,6 +14,7 @@ class Templates
           <h1>#{pr.title}</h1>
           <ul>
             <li>Repository:<strong>#{pr.repo}</strong></li>
+            <li>Date:<strong>#{pr.date}</strong></li>
             <li>From:<strong>#{pr.from}</strong></li>
             <li>To:<strong>#{pr.to}</strong></li>
           </ul>

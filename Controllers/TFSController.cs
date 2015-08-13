@@ -1,31 +1,65 @@
 ﻿using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
+using System.Linq;
+using System.Threading.Tasks;
+using TfsPanel.Configuration;
+using TfsPanel.Models;
+using TfsPanel.Vso;
 
-namespace Dev.WebApp.Controllers
+namespace TfsPanel.Controllers
 {
     [Route("api")]
     public class TFSController : Controller
     {
-        [HttpGet, Route("/api/builds")]
-        public JsonResult Builds()
+        private readonly VsoFactory factory;
+
+        public TFSController(VsoFactory factory)
         {
-            return Json(new object[]
-            {
-               new { number = 123465432, name = "CI SDK", author = "João da Silva", status = "Failed", date = "a minute ago", duration = 7 },
-               new { number = 123465432, name = "CI INSTALLER", author = "João da Silva", status = "Failed", date = "5 minutes ago", duration = 17.3 },
-               new { number = 123465432, name = "CI CONTROLS", author = "João da Silva", status = "Partially Succeeded", date = "12/12/2015 18 =30", duration = 22.8 },
-               new { number = 123465432, name = "CI DOCS", author = "João da Silva", status = "Succeeded", date = "12/12/2015 19 =36", duration = 2 },
-               new { number = 123465432, name = "DEPLOY DOCS", author = "João da Silva", status = "Succeeded", date = "12/12/2015 19 =30", duration = 5 },
-               new { number = 123465432, name = "CI CONTROLS", author = "João da Silva", status = "Partially Succeeded", date = "11/12/2015 12 =40", duration = 22.8 },
-            });
+            this.factory = factory;
         }
-        
-        [HttpGet, Route("/api/pullrequests")]
-        public JsonResult PullRequests()
+
+        [HttpGet, Route("/api/builds")]
+        public async Task<JsonResult> Builds()
         {
-            return Json(new object[]
-            {
-                new { repo = "components", @from = "js/menu", to = "master", title = "Create menu component" }
-            });
+            var server = factory.CreateBuildServer();
+
+            var definitions = await server.BuildDefinitions();
+            var builds = (await server.Builds(definitions, 1))
+                .GroupBy(build => build.Status)
+                .OrderByDescending(status => status.Key)
+                .SelectMany(build => build.OrderByDescending(b => b.FinishTime))
+                .Select(build => new
+                {
+                    number = build.Number,
+                    name = build.Definition,
+                    author = build.Author,
+                    status = build.Status.ToJson(),
+                    date = build.FinishTime.ToString("dd/MM/yyy HH:mm"),
+                    duration = build.Duration
+                });
+
+            return Json(builds);
+        }
+
+        [HttpGet, Route("/api/pullrequests")]
+        public async Task<JsonResult> PullRequests()
+        {
+            var server = factory.CreatePullRequestsServer();
+
+            var repos = await server.Repositories();
+            var prs = (await server.ActivePullRequests(repos))
+                .OrderByDescending(pr => pr.CreationDate)
+                .Select(pr => new
+                {
+                    from = pr.FromBranch,
+                    author = pr.Author,
+                    to = pr.ToBranch,
+                    title = pr.Title,
+                    repo = pr.Repo.Name,
+                    date = pr.CreationDate.ToString("dd/MM/yyy hh:mm")
+                });
+
+            return Json(prs);
         }
     }
 }

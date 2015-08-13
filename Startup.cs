@@ -4,6 +4,8 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
+using TfsPanel.Configuration;
+using TfsPanel.Vso;
 
 namespace tfspanel
 {
@@ -12,8 +14,10 @@ namespace tfspanel
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+                .AddEnvironmentVariables()
                 .AddJsonFile("config.json")
-                .AddEnvironmentVariables();
+                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
+
             Configuration = builder.Build();
         }
 
@@ -22,6 +26,9 @@ namespace tfspanel
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddTransient<VsoFactory>();
+            services.Configure<TfsServer>(Configuration.GetConfigurationSection("TfsServer"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

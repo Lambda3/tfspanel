@@ -1,5 +1,19 @@
 {
   "AppSettings": {
-    "SiteTitle": "tfspanel"
+    "MaxItems":  6
+  },
+  "TfsServer": {
+    "PullRequests": {
+      "Username": "xxxx@yyyy.com",
+      "Password": "password here",
+      "TeamProject": "MyTeamProject",
+      "Api": "https://xxxx_vso.visualstudio.com/DefaultCollection/MyTeamProject/_apis/"
+    },
+    "Builds": {
+      "Username": "aaaa@bbbb.com",
+      "Password": "password here",
+      "TeamProject": "MyTeamProject",
+      "Api": "https://aaaa_vso.visualstudio.com/DefaultCollection/MyTeamProject/_apis/"
+    }
   }
 }

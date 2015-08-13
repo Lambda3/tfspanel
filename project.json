@@ -1,7 +1,7 @@
 {
   "webroot": "wwwroot",
   "version": "0.0.1",
-  "authors": ["Fernando Oliveira"],
+  "authors": [ "Fernando Oliveira" ],
   "description": "TFS build and pull request monitor",
 
   "dependencies": {
@@ -16,8 +16,10 @@
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
     "Microsoft.Framework.Logging": "1.0.0-beta6",
     "Microsoft.Framework.Logging.Console": "1.0.0-beta6",
-    "System.Runtime.Serialization.Primitives":  "4.0.10-*",
-    "Kestrel": "1.0.0-beta6"
+    "Newtonsoft.Json": "7.0.1",
+    "System.Runtime.Serialization.Primitives": "4.0.10-*",
+    "Kestrel": "1.0.0-beta6",
+    "System.Net.Http": "4.0.0"
   },
 
   "commands": {
@@ -26,7 +28,7 @@
   },
 
   "frameworks": {
-    "dnxcore50": {}
+    "dnxcore50": { }
   },
 
   "exclude": [
@@ -35,12 +37,13 @@
     "node_modules"
   ],
   "publishExclude": [
+    ".git",
     "node_modules",
     "**.xproj",
     "**.user",
     "**.vspscc"
   ],
   "scripts": {
-    "prepublish": ["npm install"]
+    "prepublish": [ "npm install" ]
   }
 }

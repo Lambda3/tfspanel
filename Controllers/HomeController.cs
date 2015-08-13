@@ -1,6 +1,6 @@
 using Microsoft.AspNet.Mvc;
 
-namespace tfspanel.Controllers
+namespace TfsPanel.Controllers
 {
     public class HomeController : Controller
     {
