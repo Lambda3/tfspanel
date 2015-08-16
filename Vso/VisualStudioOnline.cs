@@ -49,7 +49,7 @@ namespace TfsPanel.Vso
         public async Task<IEnumerable<PullRequest>> ActivePullRequests(Repository repository)
         {
             var maxCount = (data as TfsPullRequestsServerData).ItemsPerRequest;
-            var response = await requests.Get($"git/repositories/{repository.Id}/pullRequests?status=active&$top={maxCount}&api-version=1.0");
+            var response = await requests.Get($"git/repositories/{repository.Id}/pullRequests?status=completed&$top={maxCount}&api-version=1.0");
             return (response.value as JArray)
                 .Select((dynamic pr) => new PullRequest
                 {
